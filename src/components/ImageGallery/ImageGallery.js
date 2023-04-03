@@ -24,6 +24,7 @@ export const ImageGallery = ({ searchResult }) => {
   const [largeImageUrl, setLargeImageUrl] = useState('');
   const [tags, setTags] = useState('');
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [query, setQuery] = useState(searchResult);
 
   const reset = () => {
     setImages([]);
@@ -35,13 +36,14 @@ export const ImageGallery = ({ searchResult }) => {
       return;
     }
     reset();
+    setQuery(searchResult);
   }, [searchResult]);
 
   useEffect(() => {
-    if (!searchResult) {
+    if (!query) {
       return;
     }
-    getImages(searchResult, pageNumber)
+    getImages(query, pageNumber)
       .then(e => {
         setImages(prevDef => [...prevDef, ...e]);
         if (e.length === 0) {
@@ -53,7 +55,7 @@ export const ImageGallery = ({ searchResult }) => {
         setIsLoadingMore(false);
       })
       .catch(error => console.log(error));
-  }, [searchResult, pageNumber]);
+  }, [query, pageNumber]);
 
   useEffect(() => {
     if (!searchResult) {
@@ -102,4 +104,3 @@ export const ImageGallery = ({ searchResult }) => {
 ImageGallery.propTypes = {
   searchResult: PropTypes.string.isRequired,
 };
-
